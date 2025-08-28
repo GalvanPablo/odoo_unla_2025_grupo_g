@@ -1,0 +1,22 @@
+<!-- real_estate/security/real_estate_res_groups.xml -->
+<odoo>
+    <!-- Categoría propia para los grupos del módulo -->
+    <record id="module_category_real_estate" model="ir.module.category">
+        <field name="name">Inmobiliaria</field>
+        <field name="description">Grupos y permisos del módulo Real Estate</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <!-- Grupo: Vendedor -->
+    <record id="group_real_estate_seller" model="res.groups">
+        <field name="name">Vendedor de Propiedades</field>
+        <field name="category_id" ref="module_category_real_estate"/>
+    </record>
+
+    <!-- Grupo: Manager -->
+    <record id="group_real_estate_manager" model="res.groups">
+        <field name="name">Manager de Propiedades</field>
+        <field name="category_id" ref="module_category_real_estate"/>
+        <field name="implied_ids" eval="[(4, ref('group_real_estate_seller'))]"/>
+    </record>
+</odoo>

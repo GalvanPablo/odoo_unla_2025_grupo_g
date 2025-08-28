@@ -1,0 +1,5 @@
+access_state_property,access_state_property,model_estate_property,real_estate.group_real_estate_seller,1,1,0,0
+access_estate_property_manager,estate.property manager,model_estate_property,real_estate.group_real_estate_manager,1,1,1,1
+
+
+
