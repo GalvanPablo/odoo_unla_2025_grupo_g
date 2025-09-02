@@ -1,6 +1,6 @@
 ## Documento del Grupo-G - Programación de Sistemas ERP con Odoo
 
-Compartimos a continuación un documento colaborativo de nuestro grupo-G, donde se detallan ejercicios y prácticas de la materia **Programación de Sistemas ERP con Odoo**. En este documento se abordan temas como:
+Compartimos a continuación un documento colaborativo de nuestro Grupo-G, donde se detallan ejercicios y prácticas de la materia **Programación de Sistemas ERP con Odoo**. En este documento se abordan temas como:
 
 - Creación y verificación de modelos en Odoo.
 - Campos adicionales generados automáticamente en los modelos.
