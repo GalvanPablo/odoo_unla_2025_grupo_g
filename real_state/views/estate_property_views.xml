@@ -92,6 +92,15 @@
                         name="filter_my_properties"
                         domain="[('create_uid','=',uid)]"/>
 
+                <!-- Filtro: Propiedades disponibles (Nuevo u Oferta recibida) -->
+                <filter string="Disponibles"
+                        name="filter_available_properties"
+                        domain="[('state','in',('new','offer_received'))]"/>
+
+                <filter string="Mis propiedades disponibles"
+                        name="filter_my_available_and"
+                        domain="['&amp;', ('create_uid','=',uid), ('state','in',('new','offer_received'))]"/>
+
                 <!-- c, d, e. Agrupaciones -->
                 <group expand="1" string="Agrupar por">
                     <filter string="Usuario"
@@ -103,6 +112,9 @@
                     <filter string="Código postal"
                             name="group_by_postcode"
                             context="{'group_by':'postcode'}"/>
+                    <filter string="Estado"
+                            name="group_by_state"
+                            context="{'group_by':'state'}"/>
                 </group>
             </search>
         </field>
