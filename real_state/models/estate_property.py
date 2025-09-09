@@ -49,3 +49,22 @@ class EstateProperty(models.Model):
         copy=False,
         default="new",
     )
+
+    property_type_id = fields.Many2one(
+        comodel_name="estate.property.type",
+        string="Tipo Propiedad",
+        required=True
+    )
+    
+    buyer_id = fields.Many2one(
+        "res.partner",
+        string="Comprador"
+    )
+
+    salesman_id = fields.Many2one(
+        'res.users',
+        string="Vendedor",
+        defaultt=lambda self: self.env.user,
+        copy=False,
+        index=True
+    )
