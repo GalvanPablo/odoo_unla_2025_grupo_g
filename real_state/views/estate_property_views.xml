@@ -70,14 +70,16 @@
                                 <field name="garden_orientation"/>
                             </group>
                         </page>
-                    </notebook>
-                    <notebook>
-                        <page string= "Mas info.">
+                        <page string="Más info.">
                             <group>
                               <field name="buyer_id"/>
                               <field name="salesman_id"/>
                             </group>
-                          </page>
+                        </page>
+                        <!-- Ejercicio 41 -->
+                        <page string="Ofertas">
+                            <field name="offer_ids"/>
+                        </page>
                     </notebook>
                 </sheet>
             </form>
