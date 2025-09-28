@@ -5,6 +5,10 @@
             <menuitem id="menu_estate_advertisements" name="Anuncios">
                 <menuitem id="menu_estate_property" action="action_estate_property"/>
             </menuitem>
+            <menuitem id="menu_estate_settings" name="Ajustes">
+                <menuitem id="menu_estate_property_type" action="action_estate_property_type"/>
+                <menuitem id="menus_estate_property_tag" action="action_estate_property_tag"/>
+            </menuitem>
         </menuitem>
     </data>
 </odoo>
