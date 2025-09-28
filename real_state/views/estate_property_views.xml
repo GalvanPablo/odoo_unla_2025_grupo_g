@@ -34,12 +34,15 @@
             <form string="Propiedad">
                 <header>
                     <field name="state" widget="statusbar"/>
-                    <field name="tag_ids" widget="many2many_tags"/>
                 </header>
                 <sheet>
                     <h1>
                         <field name="name" placeholder="Nombre propiedad"/>
                     </h1>
+
+                    <group>
+                        <field name="tag_ids" widget="many2many_tags"/>
+                    </group>
                     
                     <group>
                         <group>

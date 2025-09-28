@@ -64,13 +64,13 @@ class EstateProperty(models.Model):
     salesman_id = fields.Many2one(
         'res.users',
         string="Vendedor",
-        defaultt=lambda self: self.env.user,
+        default=lambda self: self.env.user,
         copy=False,
         index=True
     )
     tag_ids =fields.Many2many(
-      comodel_name="estate.property.tag",
-      string="Etiquetas"
+        comodel_name="estate.property.tag",
+        string="Etiquetas"
     )
 
     offer_ids = fields.One2many(
