@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields, api
 from dateutil.relativedelta import relativedelta
 
 class EstateProperty(models.Model):
@@ -33,7 +33,7 @@ class EstateProperty(models.Model):
         ],
         default="north"
     )
-    gardenArea = fields.Integer(string="Superficie jardín")
+    garden_area = fields.Integer(string="Superficie jardín")
     
     # Campo state - Ejercicio 21
     state = fields.Selection(
@@ -74,7 +74,18 @@ class EstateProperty(models.Model):
     )
 
     offer_ids = fields.One2many(
-    comodel_name="estate.property.offer",
-    inverse_name="property_id",
-    string="Ofertas"
-)
+        comodel_name="estate.property.offer",
+        inverse_name="property_id",
+        string="Ofertas"
+    )
+
+    total_area = fields.Integer(
+        string="Superficie total",
+        compute="_compute_total_area",
+        store=True
+    )
+
+    @api.depends('living_area', 'garden_area')
+    def _compute_total_area(self):
+        for record in self:
+            record.total_area = record.living_area + record.garden_area

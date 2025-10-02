@@ -64,12 +64,13 @@
                                 <field name="living_area"/>
                                 <field name="facades"/>
                                 <field name="garage"/>
+                                <field name="total_area"/>
                             </group>
                         </page>
                         <page string="Jardín">
                             <group>
                                 <field name="garden"/>
-                                <field name="gardenArea" string="Superficie jardín"/>
+                                <field name="garden_area" string="Superficie jardín"/>
                                 <field name="garden_orientation"/>
                             </group>
                         </page>
