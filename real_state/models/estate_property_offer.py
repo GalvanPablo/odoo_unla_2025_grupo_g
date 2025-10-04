@@ -13,7 +13,7 @@ class EstatePropertyOffer(models.Model):
     status = fields.Selection(
         [
             ("accepted", "Aceptada"),
-            ("refused", "Rechazada")
+            ("rejected", "Rechazada")
         ],
         string="Estado"
     )
@@ -63,6 +63,23 @@ class EstatePropertyOffer(models.Model):
                 delta = record.date_deadline - record.create_date.date()
                 record.validity = delta.days
 
+    def action_accept_offer(self):
+        for offer in self:
+            if offer.status == 'accepted':
+                raise UserError("Esta oferta ya fue aceptada.")
+            
+            # 1. Actualizar la propiedad
+            prop = offer.property_id
+            prop.selling_price = offer.price
+            prop.buyer_id = offer.partner_id
+            prop.state = 'offer_accepted'
 
+            # 2. Cambiar estado de esta oferta
+            offer.status = 'accepted'
 
-  
+            # 3. Rechazar automáticamente las demás ofertas
+            other_offers = self.search([
+                ('property_id', '=', prop.id),
+                ('id', '!=', offer.id)
+            ])
+        other_offers.write({'status': 'rejected'})
