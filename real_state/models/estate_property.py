@@ -111,7 +111,14 @@ class EstateProperty(models.Model):
             self.garden_area = 10
         else:
             self.garden_area = 0
-  
 
-
+    @api.onchange('expected_price')
+    def _onchange_expected_price(self):
+        if self.expected_price and self.expected_price < 10000:
+            return {
+                'warning': {
+                    'title': "Precio bajo",
+                    'message': "El precio esperado ingresado es menor a 10.000. Verificá si no fue un error de tipeo."
+                }
+            }
 
