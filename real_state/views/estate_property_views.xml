@@ -53,6 +53,7 @@
                         <group>
                             <field name="expected_price"/>
                             <field name="selling_price"/>
+                            <field name="best_offer" readonly="1"/> <!-- readonly="1" por que el precio se calcula solo-->
                         </group>
                     </group>
                     
