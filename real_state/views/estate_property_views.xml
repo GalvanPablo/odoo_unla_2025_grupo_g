@@ -33,7 +33,22 @@
         <field name="arch" type="xml">
             <form string="Propiedad">
                 <header>
+                    <!-- Ribbon de estado -->
+                    <!-- <field name="state" widget="statusbar" statusbar_visible="new,offer_received,offer_accepted,sold,canceled"/> -->
                     <field name="state" widget="statusbar"/>
+                    
+                    <!-- Botón Cancelar -->
+                    <button name="action_cancel_property"
+                            type="object"
+                            string="Cancelar"
+                            class="btn-secondary"/>
+                    
+                    <!-- Botón Marcar como vendida -->
+                    <button name="action_mark_sold"
+                            type="object"
+                            string="Marcar como vendida"
+                            class="btn-success"/>
+                    
                 </header>
                 <sheet>
                     <h1>

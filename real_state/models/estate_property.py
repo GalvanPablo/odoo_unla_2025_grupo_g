@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.exceptions import UserError
 from dateutil.relativedelta import relativedelta
 
 class EstateProperty(models.Model):
@@ -122,3 +123,16 @@ class EstateProperty(models.Model):
                 }
             }
 
+    def action_cancel_property(self):
+        for record in self:
+            if record.state == 'sold':
+                raise UserError("No se puede cancelar una propiedad que ya está vendida.")
+            record.state = 'canceled'
+
+    def action_mark_sold(self):
+        for record in self:
+            if record.state == 'canceled':
+                raise UserError("No se puede marcar como vendida una propiedad cancelada.")
+            if record.state == 'sold':
+                raise UserError("No se puede marcar como vendidad una propiedad que ya fue vendida.")
+            record.state = 'sold'
