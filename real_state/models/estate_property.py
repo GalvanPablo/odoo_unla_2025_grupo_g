@@ -68,7 +68,7 @@ class EstateProperty(models.Model):
         copy=False,
         index=True
     )
-    tag_ids =fields.Many2many(
+    tag_ids = fields.Many2many(
         comodel_name="estate.property.tag",
         string="Etiquetas"
     )
@@ -100,9 +100,18 @@ class EstateProperty(models.Model):
         for record in self:
             if record.offer_ids:
                 record.best_offer = max(record.offer_ids.mapped('price'))
-                
             else:
-                record.best_offer = 0.0     
+                record.best_offer = 0.0
+
+    # Onchange del jardín
+    @api.onchange('garden')
+    def _onchange_garden(self):
+        """Actualiza automáticamente el área del jardín según el checkbox."""
+        if self.garden:
+            self.garden_area = 10
+        else:
+            self.garden_area = 0
+  
 
 
 
