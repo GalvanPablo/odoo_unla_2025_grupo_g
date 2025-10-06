@@ -33,7 +33,22 @@
         <field name="arch" type="xml">
             <form string="Propiedad">
                 <header>
+                    <!-- Ribbon de estado -->
+                    <!-- <field name="state" widget="statusbar" statusbar_visible="new,offer_received,offer_accepted,sold,canceled"/> -->
                     <field name="state" widget="statusbar"/>
+                    
+                    <!-- Botón Cancelar -->
+                    <button name="action_cancel_property"
+                            type="object"
+                            string="Cancelar"
+                            class="btn-secondary"/>
+                    
+                    <!-- Botón Marcar como vendida -->
+                    <button name="action_mark_sold"
+                            type="object"
+                            string="Marcar como vendida"
+                            class="btn-success"/>
+                    
                 </header>
                 <sheet>
                     <h1>
@@ -53,6 +68,7 @@
                         <group>
                             <field name="expected_price"/>
                             <field name="selling_price"/>
+                            <field name="best_offer" readonly="1"/> <!-- readonly="1" por que el precio se calcula solo-->
                         </group>
                     </group>
                     
@@ -64,12 +80,13 @@
                                 <field name="living_area"/>
                                 <field name="facades"/>
                                 <field name="garage"/>
+                                <field name="total_area"/>
                             </group>
                         </page>
                         <page string="Jardín">
                             <group>
                                 <field name="garden"/>
-                                <field name="gardenArea" string="Superficie jardín"/>
+                                <field name="garden_area" string="Superficie jardín"/>
                                 <field name="garden_orientation"/>
                             </group>
                         </page>

@@ -1,4 +1,5 @@
-from odoo import models, fields
+from odoo import models, fields, api
+from odoo.exceptions import UserError
 from dateutil.relativedelta import relativedelta
 
 class EstateProperty(models.Model):
@@ -33,7 +34,7 @@ class EstateProperty(models.Model):
         ],
         default="north"
     )
-    gardenArea = fields.Integer(string="Superficie jardín")
+    garden_area = fields.Integer(string="Superficie jardín")
     
     # Campo state - Ejercicio 21
     state = fields.Selection(
@@ -68,13 +69,70 @@ class EstateProperty(models.Model):
         copy=False,
         index=True
     )
-    tag_ids =fields.Many2many(
+    tag_ids = fields.Many2many(
         comodel_name="estate.property.tag",
         string="Etiquetas"
     )
 
     offer_ids = fields.One2many(
-    comodel_name="estate.property.offer",
-    inverse_name="property_id",
-    string="Ofertas"
-)
+        comodel_name="estate.property.offer",
+        inverse_name="property_id",
+        string="Ofertas"
+    )
+
+    total_area = fields.Integer(
+        string="Superficie total",
+        compute="_compute_total_area",
+        store=True
+    )
+
+    @api.depends('living_area', 'garden_area')
+    def _compute_total_area(self):
+        for record in self:
+            record.total_area = record.living_area + record.garden_area
+
+    best_offer = fields.Float(
+        string="Mejor Oferta", 
+        compute="_compute_best_offer"
+    )   
+
+    @api.depends('offer_ids.price')
+    def _compute_best_offer(self):
+        for record in self:
+            if record.offer_ids:
+                record.best_offer = max(record.offer_ids.mapped('price'))
+            else:
+                record.best_offer = 0.0
+
+    # Onchange del jardín
+    @api.onchange('garden')
+    def _onchange_garden(self):
+        """Actualiza automáticamente el área del jardín según el checkbox."""
+        if self.garden:
+            self.garden_area = 10
+        else:
+            self.garden_area = 0
+
+    @api.onchange('expected_price')
+    def _onchange_expected_price(self):
+        if self.expected_price and self.expected_price < 10000:
+            return {
+                'warning': {
+                    'title': "Precio bajo",
+                    'message': "El precio esperado ingresado es menor a 10.000. Verificá si no fue un error de tipeo."
+                }
+            }
+
+    def action_cancel_property(self):
+        for record in self:
+            if record.state == 'sold':
+                raise UserError("No se puede cancelar una propiedad que ya está vendida.")
+            record.state = 'canceled'
+
+    def action_mark_sold(self):
+        for record in self:
+            if record.state == 'canceled':
+                raise UserError("No se puede marcar como vendida una propiedad cancelada.")
+            if record.state == 'sold':
+                raise UserError("No se puede marcar como vendidad una propiedad que ya fue vendida.")
+            record.state = 'sold'
