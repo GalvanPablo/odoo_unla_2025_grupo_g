@@ -33,8 +33,6 @@
         <field name="arch" type="xml">
             <form string="Propiedad">
                 <header>
-                    <!-- Ribbon de estado -->
-                    <!-- <field name="state" widget="statusbar" statusbar_visible="new,offer_received,offer_accepted,sold,canceled"/> -->
                     <field name="state" widget="statusbar"/>
                     
                     <!-- Botón Cancelar -->
@@ -51,6 +49,12 @@
                     
                 </header>
                 <sheet>
+                    <!-- Ribbon de estado -->
+                    <widget name="web_ribbon"
+                            title="Vendida"
+                            bg_color="bg-danger"
+                            invisible="state != 'sold'"/>
+
                     <h1>
                         <field name="name" placeholder="Nombre propiedad"/>
                     </h1>
