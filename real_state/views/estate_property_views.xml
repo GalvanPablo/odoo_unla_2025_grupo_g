@@ -22,6 +22,8 @@
                 <field name="selling_price"/>
                 <field name="date_availability"/>
                 <field name="state"/>
+                <field name="total_area"/>
+                <field name="best_offer" readonly="1"/>
             </list>
         </field>
     </record>
@@ -46,6 +48,11 @@
                             type="object"
                             string="Marcar como vendida"
                             class="btn-success"/>
+                    <!-- Botón para crear oferta automática -->
+                    <button name="action_generate_automatic_offer"
+                            type="object"
+                            string="Generar oferta automática"
+                            class="btn-primary"/>
                     
                 </header>
                 <sheet>
