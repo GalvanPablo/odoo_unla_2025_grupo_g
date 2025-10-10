@@ -6,6 +6,14 @@ class EstatePropertyOffer(models.Model):
     _name = "estate.property.offer"
     _description = "Oferta sobre propiedad"
 
+    _sql_constraints = [
+        (
+            "unique_partner_property_offer",
+            "unique(partner_id, property_id)",
+            "Un cliente no puede hacer más de una oferta sobre la misma propiedad."
+        )
+    ]
+
     price = fields.Float(
         string="Precio",
         required=True
