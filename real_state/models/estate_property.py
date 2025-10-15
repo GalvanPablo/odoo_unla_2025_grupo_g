@@ -186,3 +186,32 @@ class EstateProperty(models.Model):
             self.env['estate.property.offer'].create(vals)
 
         return True
+    
+    # 🔹 Punto 21: Botón para Cargar,Sacar, Vincular etiquetas
+    #Saca todas las etiquetas
+    def action_sacar_etiquetas(self):
+        for record in self:
+            record.tag_ids = [(5,0,0)] #limpia la relacion Many2many
+
+    #Carga todas las etiquetas existentes
+    def action_cargar_todas_etiquetas(self):
+        etiquetas= self.env['estate.property.tag'].search([]) #obtiene todas las etiquetas
+        for record in self:
+            record.tag_ids = [(6,0,etiquetas.ids)] #asigna todas las etiquetas
+
+    #Crea o vincula la etiqueta "A estrenar"
+    def action_a_estrenar(self):
+        etiqueta_model = self.env['estate.property.tag']
+        etiqueta = etiqueta_model.search([('name','=','A estrenar')], limit=1)
+        if not etiqueta:
+            etiqueta = etiqueta_model.create({'name':'A estrenar'})
+        for record in self:
+            record.tag_ids = [(4,etiqueta.id)] #vincula sin eliminar otras
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_new_or_cancelled(self):
+        for record in self:
+            if record.state not in('new','canceled'):
+                raise UserError(
+                    "Solo se pueden eliminar propiedades en estado 'Nuevo' o 'Cancelado'."
+                )

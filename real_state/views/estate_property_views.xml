@@ -53,6 +53,21 @@
                             type="object"
                             string="Generar oferta automática"
                             class="btn-primary"/>
+                    <!-- Botón para sacar etiquetas -->
+                    <button name="action_sacar_etiquetas"
+                            type="object"
+                            string="Sacar etiquetas"
+                            class="btn-secondary"/>
+                    <!-- Botón para cargar todas las etiquetas -->        
+                    <button name="action_cargar_todas_etiquetas"
+                            type="object"
+                            string="Cargar todas las etiquetas"
+                            class="btn-primary"/> 
+                    <!-- Botón a estrenar -->
+                    <button name="action_a_estrenar"
+                            type="object"
+                            string="A estrenar"
+                            class="oe_hightlight"/>       
                     
                 </header>
                 <sheet>
