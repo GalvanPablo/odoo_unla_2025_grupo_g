@@ -101,6 +101,12 @@ class EstatePropertyOffer(models.Model):
      for record in offer:
         property_obj = record.property_id
 
+        #Valida el estado de la propiedad
+        if property_obj.state not in ('new', 'offer_received'):
+            raise UserError(
+                "No se puede crear una oferta sobre una propiedad en estado '{}'.".format(property_obj.state)
+            )
+
         max_other_offer=max(
             (o.price for o in property_obj.offer_ids if o.id != record.id),
             default=0
@@ -108,13 +114,6 @@ class EstatePropertyOffer(models.Model):
         if record.price <= max_other_offer:
             raise UserError(
                 "El valor ofertado debe ser mayor a la mejor oferta actual ({}).".format(max_other_offer)
-            )
-            
-
-        #Valida el estado de la propiedad
-        if property_obj.state not in ('new', 'offer_received'):
-            raise UserError(
-                "No se puede crear una oferta sobre una propiedad en estado '{}'.".format(property_obj.state)
             )
 
         #Cambia el estado de la propiedad a 'offer_received' una vez creada
