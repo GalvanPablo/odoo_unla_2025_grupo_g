@@ -1,3 +1,4 @@
+import random
 from odoo import models, fields, api
 from odoo.exceptions import UserError
 from dateutil.relativedelta import relativedelta
@@ -74,17 +75,32 @@ class EstateProperty(models.Model):
         string="Etiquetas"
     )
 
+    total_area = fields.Integer(
+        string="Superficie total",
+        compute="_compute_total_area",
+        store=True
+    )
+
     offer_ids = fields.One2many(
         comodel_name="estate.property.offer",
         inverse_name="property_id",
         string="Ofertas"
     )
 
-    total_area = fields.Integer(
-        string="Superficie total",
-        compute="_compute_total_area",
-        store=True
+    # 🔹 Punto 19: Campo computado que contiene todos los ofertantes de la propiedad
+    offer_partner_ids = fields.Many2many(
+        comodel_name='res.partner',
+        string='Ofertantes',
+        compute='_compute_offer_partner_ids',
+        # store=True
     )
+
+    @api.depends('offer_ids.partner_id')
+    def _compute_offer_partner_ids(self):
+        for record in self:
+            partners = record.offer_ids.mapped('partner_id')
+            record.offer_partner_ids = partners
+
 
     @api.depends('living_area', 'garden_area')
     def _compute_total_area(self):
@@ -136,3 +152,66 @@ class EstateProperty(models.Model):
             if record.state == 'sold':
                 raise UserError("No se puede marcar como vendidad una propiedad que ya fue vendida.")
             record.state = 'sold'
+
+    # 🔹 Punto 20: Botón para generar oferta automática
+    def action_generate_automatic_offer(self):
+        for record in self:
+            if not record.expected_price or record.expected_price <= 0:
+                raise UserError("La propiedad debe tener un 'Precio esperado' mayor a 0 para generar una oferta automática.")
+
+            # Buscar contactos activos
+            partners = self.env['res.partner'].search([('active', '=', True)])
+
+            # Excluir los que ya ofertaron
+            excluded_ids = record.offer_partner_ids.ids
+            candidates = partners.filtered(lambda p: p.id not in excluded_ids)
+
+            if not candidates:
+                raise UserError("No hay contactos activos disponibles que no hayan hecho ofertas sobre esta propiedad.")
+
+            # Elegir un partner al azar
+            partner_id = random.choice(candidates.ids)
+
+            # Calcular precio aleatorio (-30% a +30%)
+            variation = random.uniform(-0.3, 0.3)
+            price = float(record.expected_price * (1 + variation))
+
+            vals = {
+                'price': price,
+                'partner_id': partner_id,
+                'property_id': record.id,
+            }
+
+            # Crear la oferta
+            self.env['estate.property.offer'].create(vals)
+
+        return True
+    
+    # 🔹 Punto 21: Botón para Cargar,Sacar, Vincular etiquetas
+    #Saca todas las etiquetas
+    def action_sacar_etiquetas(self):
+        for record in self:
+            record.tag_ids = [(5,0,0)] #limpia la relacion Many2many
+
+    #Carga todas las etiquetas existentes
+    def action_cargar_todas_etiquetas(self):
+        etiquetas= self.env['estate.property.tag'].search([]) #obtiene todas las etiquetas
+        for record in self:
+            record.tag_ids = [(6,0,etiquetas.ids)] #asigna todas las etiquetas
+
+    #Crea o vincula la etiqueta "A estrenar"
+    def action_a_estrenar(self):
+        etiqueta_model = self.env['estate.property.tag']
+        etiqueta = etiqueta_model.search([('name','=','A estrenar')], limit=1)
+        if not etiqueta:
+            etiqueta = etiqueta_model.create({'name':'A estrenar'})
+        for record in self:
+            record.tag_ids = [(4,etiqueta.id)] #vincula sin eliminar otras
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_new_or_cancelled(self):
+        for record in self:
+            if record.state not in('new','canceled'):
+                raise UserError(
+                    "Solo se pueden eliminar propiedades en estado 'Nuevo' o 'Cancelado'."
+                )

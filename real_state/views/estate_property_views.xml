@@ -22,6 +22,8 @@
                 <field name="selling_price"/>
                 <field name="date_availability"/>
                 <field name="state"/>
+                <field name="total_area"/>
+                <field name="best_offer" readonly="1"/>
             </list>
         </field>
     </record>
@@ -33,8 +35,6 @@
         <field name="arch" type="xml">
             <form string="Propiedad">
                 <header>
-                    <!-- Ribbon de estado -->
-                    <!-- <field name="state" widget="statusbar" statusbar_visible="new,offer_received,offer_accepted,sold,canceled"/> -->
                     <field name="state" widget="statusbar"/>
                     
                     <!-- Botón Cancelar -->
@@ -48,9 +48,35 @@
                             type="object"
                             string="Marcar como vendida"
                             class="btn-success"/>
+                    <!-- Botón para crear oferta automática -->
+                    <button name="action_generate_automatic_offer"
+                            type="object"
+                            string="Generar oferta automática"
+                            class="btn-primary"/>
+                    <!-- Botón para sacar etiquetas -->
+                    <button name="action_sacar_etiquetas"
+                            type="object"
+                            string="Sacar etiquetas"
+                            class="btn-secondary"/>
+                    <!-- Botón para cargar todas las etiquetas -->        
+                    <button name="action_cargar_todas_etiquetas"
+                            type="object"
+                            string="Cargar todas las etiquetas"
+                            class="btn-primary"/> 
+                    <!-- Botón a estrenar -->
+                    <button name="action_a_estrenar"
+                            type="object"
+                            string="A estrenar"
+                            class="oe_hightlight"/>       
                     
                 </header>
                 <sheet>
+                    <!-- Ribbon de estado -->
+                    <widget name="web_ribbon"
+                            title="Vendida"
+                            bg_color="bg-danger"
+                            invisible="state != 'sold'"/>
+
                     <h1>
                         <field name="name" placeholder="Nombre propiedad"/>
                     </h1>
