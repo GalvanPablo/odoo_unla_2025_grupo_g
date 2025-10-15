@@ -11,7 +11,7 @@
             <xpath expr="//notebook" position="inside">
                 <page string="Propiedades">
                     <field name="property_ids" readonly="1">
-                        <tree>
+                        <list>
                             <field name="name"/>
                             <field name="postcode"/>
                             <field name="bedrooms"/>
@@ -19,7 +19,7 @@
                             <field name="expected_price"/>
                             <field name="selling_price"/>
                             <field name="date_availability"/>
-                        </tree>
+                        </list>
                     </field>
                 </page>
             </xpath>
